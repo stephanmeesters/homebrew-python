@@ -15,11 +15,19 @@ class Dipy < Formula
   numpy_options << "with-python3" if build.with? "python3"
   depends_on "homebrew/python/numpy" => numpy_options
 
+  vtk_options = ["recommended"]
+  if build.with? "python3"
+    vtk_options << "with-python3" 
+  else
+   vtk_options << "with-python"
+ end
+  depends_on "homebrew/science/vtk" => vtk_options
+
   option "without-check", "Don't run tests during installation"
 
   resource "nibabel" do
     url "https://pypi.python.org/packages/source/n/nibabel/nibabel-2.0.2.tar.gz"
-    sha256 "2d725e862b9a383db22b595e749142a6d0e181e371b245a12bd837ba9ddb"
+    sha256 "f0ccd90ccf9ff5f9a203e1d7e2f21989db0bee1db4f9cc2762db2c5e7fd9154d"
   end
 
   def install
@@ -33,14 +41,13 @@ class Dipy < Formula
 
     Language::Python.each_python(build) do |python, version|
       ENV["PYTHONPATH"] = Formula["dipy"].opt_lib/"python#{version}/site-packages"
-      ENV["CC"] = "clang-omp"
       ENV.prepend_create_path "PYTHONPATH", lib/"python#{version}/site-packages"
 
       if build.with? "clang-omp"
-        system python, "setup.py", "build"#, "--fcompiler=clang-omp"
-      else
-        system python, "setup.py", "build"
+        ENV["CC"] = "clang-omp"
       end
+
+      system python, "setup.py", "build"
       system python, *Language::Python.setup_install_args(prefix)
     end
   end
