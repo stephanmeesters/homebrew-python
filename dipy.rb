@@ -15,12 +15,12 @@ class Dipy < Formula
   numpy_options << "with-python3" if build.with? "python3"
   depends_on "homebrew/python/numpy" => numpy_options
 
-  vtk_options = ["recommended"]
+  vtk_options = [:recommended]
   if build.with? "python3"
     vtk_options << "with-python3" 
   else
    vtk_options << "with-python"
- end
+  end
   depends_on "homebrew/science/vtk" => vtk_options
 
   option "without-check", "Don't run tests during installation"
@@ -30,10 +30,14 @@ class Dipy < Formula
     sha256 "f0ccd90ccf9ff5f9a203e1d7e2f21989db0bee1db4f9cc2762db2c5e7fd9154d"
   end
 
-  def install
+  resource "cython" do
+    url "https://pypi.python.org/packages/source/C/Cython/Cython-0.24.tar.gz"
+    sha256 "6de44d8c482128efc12334641347a9c3e5098d807dd3c69e867fa8f84ec2a3f1"
+  end
 
+  def install
     ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
-    %w[nibabel].each do |r|
+    %w[nibabel cython].each do |r|
       resource(r).stage do
         system "python", *Language::Python.setup_install_args(libexec/"vendor")
       end
