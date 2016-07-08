@@ -9,7 +9,7 @@ class Dipy < Formula
 
   depends_on :python => :recommended if MacOS.version <= :snow_leopard
   depends_on :python3 => :optional
-  depends_on :cmake => :recommended
+  depends_on "cmake" => :build
   depends_on "clang-omp" => :recommended
 
   numpy_options = []
