@@ -16,13 +16,13 @@ class Dipy < Formula
   numpy_options << "with-python3" if build.with? "python3"
   depends_on "homebrew/python/numpy" => numpy_options
 
-  vtk_options = [:recommended]
-  if build.with? "python3"
-    vtk_options << "with-python3" 
-  else
-   vtk_options << "with-python"
-  end
-  depends_on "homebrew/science/vtk" => vtk_options
+  # vtk_options = [:recommended]
+  # if build.with? "python3"
+  #   vtk_options << "with-python3" 
+  # else
+  #  vtk_options << "with-python"
+  # end
+  # depends_on "homebrew/science/vtk" => vtk_options
 
   option "without-check", "Don't run tests during installation"
 
