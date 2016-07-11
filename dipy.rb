@@ -37,15 +37,14 @@ class Dipy < Formula
   end
 
   def install
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
-    %w[nibabel cython].each do |r|
-      resource(r).stage do
-        system "python", *Language::Python.setup_install_args(libexec/"vendor")
-      end
-    end
-
     Language::Python.each_python(build) do |python, version|
-      ENV["PYTHONPATH"] = Formula["dipy"].opt_lib/"python#{version}/site-packages"
+      ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
+      %w[nibabel cython].each do |r|
+        resource(r).stage do
+          system "python", *Language::Python.setup_install_args(libexec/"vendor")
+        end
+      end
+
       ENV.prepend_create_path "PYTHONPATH", lib/"python#{version}/site-packages"
 
       if build.with? "clang-omp"
