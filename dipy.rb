@@ -15,14 +15,7 @@ class Dipy < Formula
   numpy_options = []
   numpy_options << "with-python3" if build.with? "python3"
   depends_on "homebrew/python/numpy" => numpy_options
-
-  # vtk_options = [:recommended]
-  # if build.with? "python3"
-  #   vtk_options << "with-python3" 
-  # else
-  #  vtk_options << "with-python"
-  # end
-  # depends_on "homebrew/science/vtk" => vtk_options
+  depends_on "homebrew/science/vtk" => :recommended
 
   option "without-check", "Don't run tests during installation"
 
@@ -49,6 +42,7 @@ class Dipy < Formula
 
       if build.with? "clang-omp"
         ENV["CC"] = "clang-omp"
+        ENV["C_INCLUDE_PATH"]="/usr/local/include/libiomp:$C_INCLUDE_PATH"
       end
 
       system python, "setup.py", "build"
