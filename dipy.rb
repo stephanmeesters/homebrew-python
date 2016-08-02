@@ -10,11 +10,11 @@ class Dipy < Formula
   depends_on :python => :recommended if MacOS.version <= :snow_leopard
   depends_on :python3 => :optional
   depends_on "cmake" => :build
-  depends_on "clang-omp" => :recommended
 
   numpy_options = []
   numpy_options << "with-python3" if build.with? "python3"
   depends_on "homebrew/python/numpy" => numpy_options
+  depends_on "homebrew/python/scipy" => numpy_options
   depends_on "homebrew/science/vtk" => :recommended
 
   option "without-check", "Don't run tests during installation"
@@ -39,11 +39,6 @@ class Dipy < Formula
       ENV.prepend_create_path "PYTHONPATH", lib/"python#{version}/site-packages"
       resource("nibabel").stage do
         system "python", *Language::Python.setup_install_args(prefix)
-      end
-
-      if build.with? "clang-omp"
-        ENV["CC"] = "clang-omp"
-        ENV["C_INCLUDE_PATH"]="/usr/local/include/libiomp:$C_INCLUDE_PATH"
       end
 
       system python, "setup.py", "build"
